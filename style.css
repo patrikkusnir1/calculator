@@ -1,0 +1,78 @@
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  margin: 0 auto;
+  text-align: center;
+}
+
+
+.numbers {
+  display: flex;
+  width: 33%;
+  justify-content: baseline;
+  align-items: center;
+  flex-wrap: wrap;
+  flex-grow: 0;
+}
+
+.numbers div {
+  width: 33%;
+
+}
+
+.numbers div p,
+.operators div p,
+.equal-clear div p {
+  width: 50px;
+  height: 50px;
+  border: 1px solid #587;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.operators,
+.equal-clear {
+  width: 100px;
+  /* border: 1px solid #333; */
+}
+
+.buttons-container div {
+  /* border: 1px solid #333; */
+  margin-bottom: 15px;
+}
+
+.buttons-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 50px;
+  border: 1px solid #587;
+  padding: 20px 0px;
+}
+
+.display input {
+  border: 1px solid #587;
+  height: 20px;
+  border-radius: 3px;
+  padding-bottom: 0;
+}
+
+.numbers,
+.operators,
+.equal-clear {
+  cursor: pointer;
+}
+
+.disabled {
+  background-color: gray;
+  color: gray;
+
+}
