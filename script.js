@@ -29,124 +29,257 @@ function operate(firstNumber, operator, secondNumber) {
       return "Invalid operator"
   }
 }
-const numbers = document.querySelectorAll(".numbers div");
-const operators = document.querySelectorAll(".operators div, .equal");
-const input = document.querySelector(".display");
-const clear = document.querySelector(".clear");
-const decimalButton = document.querySelector(".decimal")
-let displayValue = "0"
+
+// access DOM elements
+const inputBox = document.getElementById("input")
+const expressionDiv = document.getElementById("expression");
+const resultDiv = document.getElementById("result");
+
+// Design expression and result variable
+let expression = "";
+let result = "";
 let firstNumber = "";
-let currentOperator = "";
 let secondNumber = "";
-let result = null;
+let currentOperator = null;
 let shouldResetDisplay = false;
-let decimalAdded = false;
+
+
+// Define event handler for button click
+function buttonClick(event) {
+  // Get values from clicked button
+  const target = event.target;
+  const action = target.dataset.action;
+  const value = target.dataset.value;
+
+  // Switch case to control calculator
+  switch(action) {
+    case "number":
+      addValue(value)
+      break;
+    case "clear": 
+      clear();
+      break;
+    case "backspace":
+      backSpace()
+      break;
+      // add the result to expression as a starting point if expression is empty
+    case "addition":
+    case "subtraction":
+    case "multiplication":
+    case "division":
+      handleOperator(value);
+      break;
+    case "submit":
+      submit();
+      break;
+    case "negate":
+      negate();
+      break;
+  }
+
+  updateDisplay(expression, result);
+}
+
+function addValue(value) {
+  // add value to expression
+  if (shouldResetDisplay) {
+    expression = value;
+    shouldResetDisplay = false;
+  } else {
+      expression += value;
+  }
+
+  if ( currentOperator === null) {
+    firstNumber += value; // Build the first number if operator isn't pressed yet
+  } else {
+    secondNumber += value; // Build the second number after the operator
+  }
+}
+
+function handleOperator(operator) {
+  if (firstNumber === "") return;
+  if (secondNumber !== "") {
+    // Calculate result if we already have a second number
+    result = operate(Number(firstNumber), currentOperator, Number(secondNumber));
+    firstNumber = result.toString();
+    secondNumber = "";
+  }
+  currentOperator = operator;
+  expression += `${operator}`;
+}
+
+function updateDisplay(expression, result) {
+  expressionDiv.textContent = expression; //  // Shows the ongoing expression (before clicking `=`)
+  if (!shouldResetDisplay) {
+    resultDiv.textContent = "";
+  } 
+}
+
+function clear() {
+  expression = "";
+  result = "";
+  firstNumber = "";
+  secondNumber = "";
+  currentOperator = null;
+}
+
+function backSpace() {
+  expression = expression.slice(0, -1);
+  if (currentOperator === null) {
+    firstNumber = firstNumber.slice(0, -1)
+  } else {
+    secondNumber = secondNumber.slice(0, -1)
+  }
+}
+
+function submit() {
+  if (firstNumber !== "" && currentOperator != null && secondNumber !== "") {
+    result = operate(Number(firstNumber), currentOperator, Number(secondNumber));
+    result = Math.round(result * 100) / 100;
+    // Keep the full expression in the expressionDiv
+    expressionDiv.textContent = `${firstNumber} ${currentOperator} ${secondNumber}`;
+    resultDiv.textContent = result;
+
+    firstNumber = result.toString();
+    secondNumber = "";
+    currentOperator = null;
+    shouldResetDisplay = true;
+  } else if (firstNumber !== "" && currentOperator !== null && secondNumber === "") {
+    result = "Error: Missing second number"
+  }
+}
+
+// event listener 
+inputBox.addEventListener("click", buttonClick)
+
+function negate() {
+  // negate the result if expression is empty and result is present
+  if (expression === "" && result !== "") {
+    result = -result
+    // toggle the sign of expression if it is not already negative and it is not empty 
+  } else if (!expression.startsWith("-") && expression !== "") {
+    expression = "-" + expression;
+    // remove the negative sign if it is already negative
+  } else if (expression.startsWith("-")) {
+    expression = expression.slice(1);
+  }
+}
+// // event listeners for decimal point 
+// decimalButton.addEventListener("click", () => {
+//    // Check if decimal can be added to the current number
+//    if (currentOperator === "") {
+//     // Check if firstNumber already has a decimal
+//     if (!firstNumber.includes(".")) {
+//         firstNumber += ".";
+//         input.innerHTML = firstNumber;
+//    }
+//     } else {
+//       // Check if secondNumber already has a decimal
+//       if (!secondNumber.includes(".")) {
+//         secondNumber += ".";
+//         input.innerHTML = secondNumber;
+//       }
+//     }
+//   });
+
+
+// function isLastCharOperator() {
+//   return isNaN(parseInt(expression.slice(-1)))
+// }
+
+// function startFromResult(value) {
+//   expression += result + value;
+// }
+
+
+
 
 
 // Event listener for numbers
-numbers.forEach((number) => {
-  number.addEventListener("click", (event) => {
-    if (shouldResetDisplay) {
-      displayValue = "";
-      shouldResetDisplay = false;
-    }
-    if (number === ".") {
-      number.classList.add("disabled")
-    }
-      if (currentOperator ==="") {
-        // concatanate digits for first number
-      firstNumber += event.target.innerText;
-      input.innerHTML = firstNumber;
-      console.log("First number: ", firstNumber)
-  } else { 
-    // concatanate digits for second number
-      secondNumber += event.target.innerText;
-      input.innerHTML = secondNumber;
-      console.log("Second number:", secondNumber)
-  }
-});
-})
-// event listeners for decimal point 
-decimalButton.addEventListener("click", () => {
-  if (!decimalAdded) {
-    if (currentOperator === "") {
-      firstNumber += ".";
-      input.innerHTML = firstNumber;
-    } else {
-      secondNumber += ".";
-      input.innerHTML = secondNumber
-    }
-    decimalAdded = true;
-  }})
+
+
+
+
+
+// const numbers = document.querySelectorAll(".numbers div, .numbers button");
+// const operators = document.querySelectorAll(".operators div, .equal");
+
+// // const clear = document.querySelector(".clear");
+// const decimalButton = document.querySelector(".decimal")
+// let displayValue = "0"
+
+
+// let shouldResetDisplay = false;
+// let decimalAdded = false;
+
+
+
 
 // event listeners for operators
 
-operators.forEach((operator) => {
-  operator.addEventListener("click", (event) => {
-    const operatorClicked = event.target.innerText;
-    if (operatorClicked !== "=") {
-      if (firstNumber !== "" && secondNumber !== "") {
-        if (currentOperator === "/" && secondNumber ==- "0") {
-          result = "Error, dividing by zero is not possible";
-          input.innerHTML = result;
-          console.log(result)
-          // reset the calculator
-          firstNumber = "";
-          currentOperator = "";
-          secondNumber = "";
-          return;
-        }
-        result = operate(Number(firstNumber), currentOperator, Number(secondNumber));
-        input.innerHTML = result;
-        console.log(result)
+// operators.forEach((operator) => {
+//   operator.addEventListener("click", (event) => {
+//     const operatorClicked = event.target.innerText;
 
-         // Prepare to use the result for the next calculation
-         firstNumber = result.toString();
-         secondNumber = "";
-         shouldResetDisplay = true;
-      }
-      currentOperator = operatorClicked // asign the operator
+//     if (operatorClicked !== "=") {
+//       if (firstNumber !== "" && secondNumber !== "") {
+//         if (currentOperator === "/" && secondNumber === "0") {
+//           result = "Error, dividing by zero is not possible";
+//           input.innerHTML = result;
+//           console.log(result)
+//           // reset the calculator
+//           firstNumber = "";
+//           currentOperator = "";
+//           secondNumber = "";
+//           decimalAdded = false;
+//           return;
+//         }
+//         result = operate(Number(firstNumber), currentOperator, Number(secondNumber));
+//         input.innerHTML = result;
+//         console.log("Result: ", result)
 
-      console.log("Operator: ", currentOperator)
-      decimalAdded = false
-    } else { 
-      // if pressed =, perform the final calculation
+//          // Prepare to use the result for the next calculation
+//          firstNumber = result.toString();
+//          secondNumber = "";
+//          shouldResetDisplay = true;
+//       }
+//       currentOperator = operatorClicked // asign the operator
+
+//       console.log("Operator: ", currentOperator)
+//       decimalAdded = false;
+//     } else { 
+//       // if pressed =, perform the final calculation
     
-    if (firstNumber !== "" && secondNumber !== "") {
-      if (currentOperator === "/" && secondNumber ==- "0") {
-          result = "Error, dividing by zero is not possible";
-          input.innerHTML = result;
-          console.log(result)
-          // reset the calculator
-          firstNumber = "";
-          currentOperator = "";
-          secondNumber = "";
-          return;
-      }
-      result = operate(Number(firstNumber), currentOperator, Number(secondNumber))
-      result = Math.round(result * 100) / 100;
-      input.innerHTML = result;
-      console.log("Final result:", result)
+//         if (firstNumber !== "" && secondNumber !== "") {
+//           if (currentOperator === "/" && secondNumber === "0") {
+//           result = "Error, dividing by zero is not possible";
+//           input.innerHTML = result;
+//           console.log(result)
+//           // reset the calculator
+//           firstNumber = "";
+//           currentOperator = "";
+//           secondNumber = "";
+//           decimalAdded = false;
+//           decimalButton.removeAttribute("disabled")
+//           return;
+//       }
+//       result = operate(Number(firstNumber), currentOperator, Number(secondNumber))
+//       result = Math.round(result * 100) / 100;
+//       input.innerHTML = result;
+//       console.log("Final result:", result)
 
-      // reset firstNumber , operator, secondNumber
-      firstNumber = result.toString();
-      currentOperator = "";
-      secondNumber = "";
-      shouldResetDisplay = true;
-      decimalAdded = false
-      }
-    }
-  });
-})
+//       // reset firstNumber , operator, secondNumber
+//       firstNumber = result.toString();
+//       currentOperator = "";
+//       secondNumber = "";
+//       shouldResetDisplay = true;
+//       decimalAdded = false;
+//       decimalButton.removeAttribute("disabled")
+//       }
+//     }
+//   });
+// })
 
-clear.addEventListener("click", () => {
-  firstNumber = "";
-  currentOperator = "";
-  secondNumber = "";
-  input.innerHTML = "";
-  console.log("Cleared")
-  decimalAdded = false
-})
 
   // let buttonNumber = button.textContent;
   

@@ -1,17 +1,68 @@
-*,
-*::after,
-*::before {
-  box-sizing: border-box;
+body {
+  height: 100vh;
   margin: 0;
-  padding: 0;
+  display: flex;
+  flex-direction: column;
+  font-family: sans-serif;
+  background-color: black;
+  color: white;
 }
 
-.container {
-  margin: 0 auto;
-  text-align: center;
+section {
+  display: flex;
+  flex-wrap: wrap;
+  flex: 1;
+  padding: 10px;
+  font-size: 40px;
+  font-weight: 300;
 }
 
+#output {
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+  gap: 15px;
+}
 
+.btn {
+  flex-basis: calc(25% - 10px);
+  margin: 5px;
+  font-size: 33px;
+  height: 72px;
+  border: 0;
+  border-radius: 24px;
+  cursor: pointer;
+  color: white;
+}
+
+.light,
+.light:focus {
+  background-color: #4e505f;
+}
+
+.light:hover {
+  background-color: #8890a5;
+}
+
+.blue,
+.blue:focus {
+  background-color: #4b5efc;
+}
+
+.blue:hover {
+  background-color: #798bf9;
+}
+
+.dark,
+.dark:focus {
+  background-color: #2e2f38;
+}
+
+.dark:hover {
+  background-color: #505266;
+}
+
+/* 
 .numbers {
   display: flex;
   width: 33%;
@@ -28,7 +79,8 @@
 
 .numbers div p,
 .operators div p,
-.equal-clear div p {
+.equal-clear div p,
+.numbers button {
   width: 50px;
   height: 50px;
   border: 1px solid #587;
@@ -42,11 +94,12 @@
 .equal-clear {
   width: 100px;
   /* border: 1px solid #333; */
+/*
 }
-
+/*
 .buttons-container div {
   /* border: 1px solid #333; */
-  margin-bottom: 15px;
+/* margin-bottom: 15px;
 }
 
 .buttons-container {
@@ -69,10 +122,4 @@
 .operators,
 .equal-clear {
   cursor: pointer;
-}
-
-.disabled {
-  background-color: gray;
-  color: gray;
-
-}
+} */
