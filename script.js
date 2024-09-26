@@ -75,30 +75,50 @@ function buttonClick(event) {
     case "negate":
       negate();
       break;
+    case "mod":
+      handleOperator("%")
+      break;
+    case "decimal": 
+      decimal(value);
+      break;
   }
 
   updateDisplay(expression, result);
 }
 
 function addValue(value) {
-  // add value to expression
+    // Reset the display if a result was just shown
   if (shouldResetDisplay) {
     expression = value;
     shouldResetDisplay = false;
   } else {
-      expression += value;
+    expression += value;
   }
+
+   // Build the first or second number depending on whether an operator is pressed
 
   if ( currentOperator === null) {
     firstNumber += value; // Build the first number if operator isn't pressed yet
   } else {
     secondNumber += value; // Build the second number after the operator
   }
+
+
+
 }
 
 function handleOperator(operator) {
   if (firstNumber === "") return;
-  if (secondNumber !== "") {
+
+  if (operator === "%"){
+    if (secondNumber !== "") {
+      secondNumber = percentage(Number(firstNumber), Number(secondNumber)).toString();
+      expression += "%";
+    } 
+    return;
+  }
+   else {
+    if (secondNumber !== "") {
     // Calculate result if we already have a second number
     result = operate(Number(firstNumber), currentOperator, Number(secondNumber));
     firstNumber = result.toString();
@@ -106,6 +126,9 @@ function handleOperator(operator) {
   }
   currentOperator = operator;
   expression += `${operator}`;
+  updateDisplay(expression, result)
+  }
+
 }
 
 function updateDisplay(expression, result) {
@@ -134,7 +157,13 @@ function backSpace() {
 
 function submit() {
   if (firstNumber !== "" && currentOperator != null && secondNumber !== "") {
-    result = operate(Number(firstNumber), currentOperator, Number(secondNumber));
+    if (currentOperator === "%") {
+      result = percentage(Number(firstNumber), Number(secondNumber))
+    }
+    else {
+      result = operate(Number(firstNumber), currentOperator, Number(secondNumber));
+    }
+
     result = Math.round(result * 100) / 100;
     // Keep the full expression in the expressionDiv
     expressionDiv.textContent = `${firstNumber} ${currentOperator} ${secondNumber}`;
@@ -164,6 +193,28 @@ function negate() {
     expression = expression.slice(1);
   }
 }
+
+function percentage(num1, num2) {
+  return (num1 * num2) / 100
+}
+
+function decimal() {
+  if (currentOperator === null) {
+    // If no operator is pressed yet, check firstNumber
+    if (!firstNumber.includes(".")) {
+      firstNumber += ".";
+      expression += "."
+    }
+      } else {
+        if (!secondNumber.includes(".")) {
+          secondNumber += ".";
+          expression += "."
+        }
+      }
+    updateDisplay(expression, result)
+    }
+
+
 // // event listeners for decimal point 
 // decimalButton.addEventListener("click", () => {
 //    // Check if decimal can be added to the current number
