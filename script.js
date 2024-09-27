@@ -144,6 +144,7 @@ function clear() {
   firstNumber = "";
   secondNumber = "";
   currentOperator = null;
+  resultDiv.textContent = "";
 }
 
 function backSpace() {
