@@ -18,17 +18,20 @@ section {
 }
 
 #output {
+  display: flex;
   flex-direction: column;
   justify-content: flex-end;
   align-items: flex-end;
-  gap: 15px;
+  gap: 1.5vh;
+  padding: 10px;
+  max-width: 100%;
 }
 
 .btn {
   flex-basis: calc(25% - 10px);
   margin: 5px;
-  font-size: 33px;
-  height: 72px;
+  font-size: 5vh;
+  height: 10vh;
   border: 0;
   border-radius: 24px;
   cursor: pointer;

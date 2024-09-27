@@ -213,3 +213,47 @@ function decimal() {
       }
     updateDisplay(expression, result)
     }
+
+    // add keyboard function
+
+    // add event listener
+    document.addEventListener("keydown", handleKeyboardInput);
+
+    function handleKeyboardInput(event) {
+      const key = event.key;
+
+      // check if the key is number
+      if (!isNaN(key)) {
+        addValue(key)
+      }
+
+      // handle operator key
+      switch(key) {
+        case "+":
+        case "-":
+        case "*":
+        case "/":
+          handleOperator(key);
+          break;
+        case "Enter":
+          event.preventDefault();
+          submit();
+          break;
+        case "Backspace":
+          backSpace();
+          break;
+        case ".": 
+          decimal();
+          break;
+        case "%":
+          handleOperator("%");
+          break;
+        case "Escape":
+          clear();
+          break;
+        default: 
+          break;
+      }
+
+      updateDisplay(expression, result)
+    }
